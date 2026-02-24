@@ -1,0 +1,21 @@
+# Thanks GPT
+repos:
+    # --- Backend: Ruff Formatting & Linting ---
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.11.0
+      hooks:
+          - id: ruff
+            name: Ruff Linter
+            args: [--fix]
+          - id: ruff-format
+            name: Ruff Formatter
+
+    # --- Frontend: Biome Formatting & Linting ---
+    # Using local hook to use frontend's biome.json config
+    - repo: local
+      hooks:
+          - id: biome-check
+            name: Biome Check
+            entry: npx biome check --write
+            language: system
+            files: ^frontend/

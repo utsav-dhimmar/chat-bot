@@ -24,3 +24,8 @@
 ## Frontend
 
 - `bun install` command for installing dependencies in `/frontend` folder
+
+## Backend
+
+- `uv sync` command for creating virtual environment and install dependencies for `/backend`
+- use `uv run` pre-fix command for running code with `uv` other start virtual environment

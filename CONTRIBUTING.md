@@ -16,3 +16,11 @@
 - `chore` - for changes that won't affect the `src` code files
 - `test` - when test added or modified
 - `revert` - when revert to previous commit
+
+## Local Setup
+
+- always pull latest changes from main branch
+
+## Frontend
+
+- `bun install` command for installing dependencies in `/frontend` folder

@@ -6,3 +6,5 @@
 - Admin panel
 - testing with at least 2 user
 - handle same PDF upload multiple time
+
+[Guide](./CONTRIBUTING.md)

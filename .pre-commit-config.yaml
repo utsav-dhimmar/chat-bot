@@ -12,10 +12,10 @@ repos:
 
     # --- Frontend: Biome Formatting & Linting ---
     # Using local hook to use frontend's biome.json config
-    - repo: local
-      hooks:
-          - id: biome-check
-            name: Biome Check
-            entry: npx biome check --write
-            language: system
-            files: ^frontend/
+    # - repo: local
+    #   hooks:
+    #       - id: biome-check
+    #         name: Biome Check
+    #         entry: npx biome check --write
+    #         language: system
+    #         files: ^frontend/

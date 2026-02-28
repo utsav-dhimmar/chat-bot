@@ -20,7 +20,7 @@ class DocumentChunk(Base):
     chunk_index = Column(Integer, nullable=False)
     page_number = Column(Integer)
     content = Column(Text, nullable=False)
-    embedding = Column(Vector(1536))  # OpenAI text-embedding-ada-002 dimension
+    embedding = Column(Vector(768))
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     # Relationship

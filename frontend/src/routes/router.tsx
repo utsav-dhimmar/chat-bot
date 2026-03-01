@@ -1,3 +1,4 @@
+import ChatLayout from '@/layout/ChatLayout';
 import RootLayout from '@/layout/RootLayout';
 import { chatLoader } from '@/loader/chat';
 import Chat from '@/pages/Chat';
@@ -24,13 +25,18 @@ export const browserRoutes = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: 'chat/:conversationId',
-        element: <Chat />,
-        loader: chatLoader,
-      },
-      {
-        path: 'new',
-        element: <NewPdf />,
+        element: <ChatLayout />,
+        children: [
+          {
+            path: 'chat/:conversationId',
+            element: <Chat />,
+            loader: chatLoader,
+          },
+          {
+            path: 'new',
+            element: <NewPdf />,
+          },
+        ],
       },
     ],
   },

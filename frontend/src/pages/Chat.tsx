@@ -1,10 +1,10 @@
-import { AIMessage, HumanMessage } from '@/components/';
-import { TEMP_CONVERSION } from '@/temp/data';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Fragment, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useLoaderData } from 'react-router-dom';
-import { z } from 'zod';
+import { AIMessage, HumanMessage } from "@/components/";
+import { TEMP_CONVERSION } from "@/temp/data";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Fragment, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useLoaderData } from "react-router-dom";
+import { z } from "zod";
 
 const MessageSchema = z.object({
   message: z.string().trim().min(5, {
@@ -14,8 +14,8 @@ const MessageSchema = z.object({
 type messageData = z.infer<typeof MessageSchema>;
 
 export default function Chat() {
-  const { conversationId } = useLoaderData();
-
+  const data = useLoaderData();
+  console.log(data);
   const {
     register,
     formState: { errors },
@@ -25,7 +25,7 @@ export default function Chat() {
 
   useEffect(() => {
     // TODO: GET TITLE FROM API THEN UPDATE IT
-    document.title = 'THIS IS TITLE';
+    document.title = "THIS IS TITLE";
   }, []); // prefetch so no needed
 
   // TOD: hnalde validation and call api
@@ -33,8 +33,8 @@ export default function Chat() {
     <div
       className="card shadow-sm flex-grow-1 h-100 border-0"
       style={{
-        maxWidth: '100%',
-        borderRadius: '0',
+        maxWidth: "100%",
+        borderRadius: "0",
       }}
     >
       <div className="card-header bg-white py-3 border-bottom text-center">
@@ -46,8 +46,8 @@ export default function Chat() {
       <div className="card-body overflow-auto" style={{ flex: 1 }}>
         {TEMP_CONVERSION.map(({ role, text }) => (
           <Fragment key={text}>
-            {role === 'HUMAN' && <HumanMessage message={text} />}
-            {role === 'AI' && <AIMessage message={text} />}
+            {role === "HUMAN" && <HumanMessage message={text} />}
+            {role === "AI" && <AIMessage message={text} />}
           </Fragment>
         ))}
       </div>
@@ -56,11 +56,13 @@ export default function Chat() {
           <div className="flex-grow-1">
             <input
               type="text"
-              className={`form-control ${errors.message ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.message ? "is-invalid" : ""}`}
               placeholder="Type message..."
-              {...register('message')}
+              {...register("message")}
             />
-            {errors.message && <div className="invalid-feedback">{errors.message.message}</div>}
+            {errors.message && (
+              <div className="invalid-feedback">{errors.message.message}</div>
+            )}
           </div>
           <button type="button" className="btn btn-primary">
             Send

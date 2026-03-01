@@ -6,8 +6,10 @@ import Login from "@/pages/Login";
 import NewPdf from "@/pages/NewPdf";
 import Register from "@/pages/Register";
 import AdminDashboard from "@/pages/admin/Dashboard";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { NotFound } from "@/components/NotFound";
+import { ProtectedRoute, PublicRoute } from "@/components";
+
 export const browserRoutes = createBrowserRouter([
   {
     path: "/",
@@ -15,31 +17,41 @@ export const browserRoutes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Login />,
+        element: <Navigate to="/new" replace />,
       },
       {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
-      {
-        path: "admin",
-        element: <AdminDashboard />,
-      },
-      {
-        element: <ChatLayout />,
+        element: <PublicRoute />,
         children: [
           {
-            path: "chat/:conversationId",
-            element: <Chat />,
-            loader: chatLoader,
+            path: "login",
+            element: <Login />,
           },
           {
-            path: "new",
-            element: <NewPdf />,
+            path: "register",
+            element: <Register />,
+          },
+        ],
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "admin",
+            element: <AdminDashboard />,
+          },
+          {
+            element: <ChatLayout />,
+            children: [
+              {
+                path: "chat/:conversationId",
+                element: <Chat />,
+                loader: chatLoader,
+              },
+              {
+                path: "new",
+                element: <NewPdf />,
+              },
+            ],
           },
         ],
       },

@@ -5,9 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/store/hooks';
+import { setCredentials } from '@/store/slices/authSlice';
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [backendError, setBackendError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +28,12 @@ export default function Login() {
       setBackendError(null);
       const res = await AuthServices.login(data);
       console.log('Login success:', res);
-      localStorage.setItem('token', res.access_token);
+      
+      dispatch(setCredentials({
+        user: res.user,
+        token: res.access_token
+      }));
+
       navigate('/');
     } catch (err: any) {
       if (err.details && Array.isArray(err.details)) {

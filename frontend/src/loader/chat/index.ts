@@ -1,7 +1,8 @@
-import { redirect, type LoaderFunctionArgs } from 'react-router-dom';
-import { z } from 'zod';
+import { redirect, type LoaderFunctionArgs } from "react-router-dom";
+import { ChatServices } from "@/apis/services/chat.service";
+import { z } from "zod";
 const RouterParamSchema = z.object({
-  conversationId: z.uuid(),
+  conversationId: z.uuid("v4"),
 });
 
 export async function chatLoader({ params }: LoaderFunctionArgs) {
@@ -9,10 +10,10 @@ export async function chatLoader({ params }: LoaderFunctionArgs) {
 
   try {
     const { conversationId } = RouterParamSchema.parse(conversation_Id);
-    return { conversationId };
+    return await ChatServices.getMessages(conversationId);
+    // return conversationId;
   } catch (e) {
     console.log(e);
-    // TODO: login appropriate place
-    return redirect('/login');
+    return redirect("/");
   }
 }

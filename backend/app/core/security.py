@@ -65,7 +65,7 @@ def _get_settings() -> tuple[str, str, int, str]:
     Tries pydantic settings first, falls back to env vars for standalone dev.
     """
     try:
-        from backend.core.config import settings
+        from app.core.config import settings
 
         return (
             settings.SECRET_KEY,

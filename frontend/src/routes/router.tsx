@@ -12,6 +12,10 @@ export const browserRoutes = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
+        index: true,
+        element: <Login />,
+      },
+      {
         path: 'login',
         element: <Login />,
       },

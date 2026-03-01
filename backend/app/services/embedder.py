@@ -15,13 +15,14 @@ REQUIREMENT: Ollama must be running with nomic-embed-text pulled.
 """
 
 import asyncio
-import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List
 
 import requests
 
-OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+from app.core.config import settings
+
+OLLAMA_URL = settings.OLLAMA_BASE_URL
 
 
 # ── Dev 1's original sync functions (kept intact) ─────────────────────────────
@@ -31,7 +32,7 @@ def get_embedding(text: str) -> List[float]:
     """Single text ka embedding nikalo (sync — Dev 1's original)"""
     response = requests.post(
         f"{OLLAMA_URL}/api/embeddings",
-        json={"model": "nomic-embed-text", "prompt": text},
+        json={"model": settings.EMBEDDING_MODEL, "prompt": text},
         timeout=30,
     )
     response.raise_for_status()

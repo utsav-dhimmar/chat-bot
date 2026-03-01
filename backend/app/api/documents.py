@@ -28,6 +28,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.dependencies import get_current_user
 from app.db.models import Document, DocumentChunk, User
 from app.db.session import get_db
@@ -37,11 +38,11 @@ from app.services.file_parser import extract_pages, get_page_count
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
-UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
+UPLOAD_DIR = settings.UPLOAD_DIR
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 ALLOWED_EXTENSIONS = {".pdf", ".docx", ".txt", ".csv", ".md"}
-MAX_FILE_MB = int(os.getenv("MAX_FILE_SIZE_MB", "50"))
+MAX_FILE_MB = settings.MAX_FILE_SIZE_MB
 
 
 # ── Upload ─────────────────────────────────────────────────────────────────────

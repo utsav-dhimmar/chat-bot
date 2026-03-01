@@ -28,21 +28,9 @@ SET IN .env:
   HF_TOKEN=hf_your_token_here
 """
 
-import os
 from typing import Optional
 
-# ── Config helper ──────────────────────────────────────────────────────────
-
-
-def _cfg(key: str, default: str = "") -> str:
-    """Read from pydantic settings if available, else from env vars."""
-    try:
-        from app.core.config import settings
-
-        return str(getattr(settings, key, default))
-    except (ImportError, AttributeError):
-        return os.getenv(key, default)
-
+from app.core.config import settings
 
 # ── Anti-hallucination system prompt ───────────────────────────────────────
 
@@ -208,16 +196,16 @@ _rag_module: Optional[RAGModule] = None
 
 def init_dspy() -> None:
     """
-    Build the RAGModule singleton based on .env config.
+    Build the RAGModule singleton based on pydantic settings.
     Call once at app startup in main.py @app.on_event("startup").
     """
     global _rag_module
 
-    provider = _cfg("LLM_PROVIDER", "huggingface").lower()
+    provider = settings.LLM_PROVIDER.lower()
 
     if provider == "huggingface":
-        hf_token = _cfg("HF_TOKEN", "")
-        model = _cfg("LLM_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+        hf_token = settings.HF_TOKEN
+        model = settings.LLM_MODEL
 
         if not hf_token or not hf_token.startswith("hf_"):
             raise ValueError(
@@ -234,8 +222,8 @@ def init_dspy() -> None:
     elif provider == "openai":
         import dspy
 
-        api_key = _cfg("OPENAI_API_KEY", "")
-        model = _cfg("LLM_MODEL", "gpt-4o-mini")
+        api_key = settings.OPENAI_API_KEY
+        model = settings.LLM_MODEL
         if not api_key:
             raise ValueError("OPENAI_API_KEY not set in .env")
         lm = dspy.LM(

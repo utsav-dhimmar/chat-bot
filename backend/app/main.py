@@ -12,23 +12,15 @@ API docs at:
     http://localhost:8000/docs
 """
 
-# Load .env FIRST before any other imports read env vars
-import os
-
-try:
-    from dotenv import load_dotenv
-
-    load_dotenv(override=True)
-    print(f"[Env] DATABASE_URL = {os.getenv('DATABASE_URL', 'NOT FOUND')[:50]}")
-except ImportError:
-    pass
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import auth, chat, documents
+from app.core.config import settings
 from app.db.session import create_all_tables
 from app.services.dspy_module import init_dspy
+
+print(f"[Env] DATABASE_URL = {settings.DATABASE_URL[:50]}")
 
 app = FastAPI(
     title="File-Based Chatbot API",

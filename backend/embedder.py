@@ -1,6 +1,7 @@
-import requests
-from typing import List
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List
+
+import requests
 
 
 def get_embedding(text: str) -> List[float]:

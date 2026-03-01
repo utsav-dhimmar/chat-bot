@@ -4,13 +4,13 @@ db/session.py
 Async SQLAlchemy engine + session factory.
 """
 
-import os
-
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
+
+from app.core.config import settings
 
 # Load .env file explicitly — ensures vars are available before anything else
 try:
@@ -22,19 +22,9 @@ except ImportError:
 
 
 def _get_database_url() -> str:
-    try:
-        from backend.core.config import settings
+    from app.core.config import settings
 
-        return settings.DATABASE_URL
-    except (ImportError, AttributeError):
-        url = os.getenv("DATABASE_URL", "")
-        if not url:
-            raise ValueError(
-                "\nDATABASE_URL is not set in your .env file!\n"
-                "Add this line to .env:\n"
-                "DATABASE_URL=postgresql+asyncpg://chatbot:chatbot_pass@localhost:5432/chatbot_db"
-            )
-        return url
+    return settings.DATABASE_URL
 
 
 def _get_engine():
@@ -85,7 +75,7 @@ async def get_db():
 
 async def create_all_tables() -> None:
     """Create all tables. Called at startup in main.py."""
-    from backend.db.models import Base
+    from app.db.models import Base
 
     engine = _get_engine()
     try:
@@ -104,7 +94,7 @@ async def create_all_tables() -> None:
                 "\n[DB] Cannot connect to PostgreSQL!\n"
                 "Fix: Make sure Docker is running:\n"
                 "     docker start chatbot-postgres\n"
-                f"     DATABASE_URL = {os.getenv('DATABASE_URL', 'NOT SET')}"
+                f"     DATABASE_URL = {settings.DATABASE_URL}"
             )
         if "password" in err.lower() or "authentication" in err.lower():
             raise RuntimeError(

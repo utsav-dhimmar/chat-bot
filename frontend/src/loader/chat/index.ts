@@ -1,7 +1,7 @@
 import { redirect, type LoaderFunctionArgs } from 'react-router-dom';
 import { z } from 'zod';
 const RouterParamSchema = z.object({
-  conversationId: z.uuid('v4'),
+  conversationId: z.uuid(),
 });
 
 export async function chatLoader({ params }: LoaderFunctionArgs) {

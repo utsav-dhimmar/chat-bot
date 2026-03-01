@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.models.base import Base
 
-load_dotenv() 
+load_dotenv()
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",

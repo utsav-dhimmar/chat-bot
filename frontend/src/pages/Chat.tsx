@@ -1,96 +1,81 @@
-import { AIMessage, HumanMessage } from "@/components/chat/Message";
+import { ChatHistory, AIMessage, HumanMessage } from "@/components/";
 import { TEMP_CONVERSION } from "@/temp/data";
-import { zodResolver } from "@hookform/resolvers/zod/src/zod.js";
-import { Fragment } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-    redirect,
-    useLoaderData,
-    useNavigate,
-    type LoaderFunctionArgs,
-} from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { z } from "zod";
 
-const RouterParamSchema = z.object({
-	conversationId: z.uuid("v4"),
-});
-type RouteParams = z.infer<typeof RouterParamSchema>;
-
-export async function chatLoader({ params }: LoaderFunctionArgs) {
-	const conversation_Id = params;
-
-	try {
-		const { conversationId } = RouterParamSchema.parse(conversation_Id);
-		return { conversationId };
-	} catch (e) {
-		console.log(e);
-		return redirect("/login");
-	}
-}
 const MessageSchema = z.object({
-	message: z.string().trim(),
+  message: z.string().trim().min(5, {
+    error: "Empty Message can't be send",
+  }),
 });
 type messageData = z.infer<typeof MessageSchema>;
+
 export default function Chat() {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<messageData>({
-		resolver: zodResolver(MessageSchema),
-	});
-	const navigate = useNavigate();
-	const { conversationId } = useLoaderData<RouteParams>();
+  const { conversationId } = useLoaderData();
+  console.log(conversationId);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const {
+    register,
+    formState: { errors },
+  } = useForm<messageData>({
+    resolver: zodResolver(MessageSchema),
+  });
 
-	return (
-		// <div className="container">
-		<div className=" d-flex justify-content-center align-items-center vh-100 bg-light">
-			<div className="card shadow p-4">
-				{/*<h2 className="text-center mb-4">Chat</h2>
-					<p className="text-center">Chat ID: {conversationId}</p>*/}
-				<div className="card-body overflow-auto">
-					{/*<HumanMessage
-							message="	Hello! How can I help you with your React
-					project today?"
-						/>
-						<AIMessage
-							message="I'm having trouble with Bootstrap validation
-					classes."
-						/>*/}
+  useEffect(() => {
+    // TODO: GET TITLE FROM API THEN UPDATE IT
+    document.title = "THIS IS TITLE";
+  }, [conversationId]);
 
-					{TEMP_CONVERSION.map(({ role, text }) => (
-						<Fragment key={text}>
-							{role === "HUMAN" && (
-								<HumanMessage message={text} />
-							)}
-							{role === "AI" && <AIMessage message={text} />}
-							{/*<AIMessage
-									message="I'm having trouble with Bootstrap validation
-							classes."
-								/>*/}
-						</Fragment>
-					))}
-				</div>
-				<div className="card-footer text-muted d-flex justify-content-start align-items-center p-3">
-					<input
-						type="text"
-						className={`form-control ${errors.message ? "is-invalid" : ""}`}
-						placeholder="Type message..."
-						{...register("message")}
-					/>
-					<button className="btn btn-primary ms-3">Send</button>
-
-					{/* Validation Error Fix: Must be sibling to input */}
-					{errors.message && (
-						<div className="invalid-feedback d-block">
-							{errors.message.message}
-						</div>
-					)}
-				</div>
-			</div>
-
-			{TEMP_CONVERSION.map(() => null)}
-		</div>
-		// </div>
-	);
+  // TOD: hnalde validation and call api
+  return (
+    <div className="container-fluid h-100 d-flex bg-light p-0 overflow-hidden">
+      <ChatHistory
+        isOpen={isHistoryOpen}
+        onToggle={() => setIsHistoryOpen(!isHistoryOpen)}
+      />
+      <div
+        className="card shadow-sm flex-grow-1 h-100 border-0"
+        style={{
+          maxWidth: "100%",
+          borderRadius: "0",
+        }}
+      >
+        <div className="card-header bg-white py-3 border-bottom text-center">
+          <h5 className="mb-0 fw-bold">
+            {/* Title will display here */}
+            Chat
+          </h5>
+        </div>
+        <div className="card-body overflow-auto" style={{ flex: 1 }}>
+          {TEMP_CONVERSION.map(({ role, text }) => (
+            <Fragment key={text}>
+              {role === "HUMAN" && <HumanMessage message={text} />}
+              {role === "AI" && <AIMessage message={text} />}
+            </Fragment>
+          ))}
+        </div>
+        <div className="card-footer">
+          <form className="d-flex align-items-center gap-2">
+            <div className="flex-grow-1">
+              <input
+                type="text"
+                className={`form-control ${errors.message ? "is-invalid" : ""}`}
+                placeholder="Type message..."
+                {...register("message")}
+              />
+              {errors.message && (
+                <div className="invalid-feedback">{errors.message.message}</div>
+              )}
+            </div>
+            <button type="button" className="btn btn-primary">
+              Send
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }

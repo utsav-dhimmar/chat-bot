@@ -19,10 +19,7 @@ def extract_text_from_pdf(file_path: str) -> List[Dict]:
 
             # Empty pages skip karo
             if text and text.strip():
-                pages.append({
-                    "page_number": page_num + 1,
-                    "content": text.strip()
-                })
+                pages.append({"page_number": page_num + 1, "content": text.strip()})
 
     return pages
 

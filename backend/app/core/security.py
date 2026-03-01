@@ -28,7 +28,7 @@ from app.core.config import settings
 # ── bcrypt context ──────────────────────────────────────────────────────────
 
 # bcrypt cost factor 12 — strong, ~300ms per hash (good balance)
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+_pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def _prepare_for_bcrypt(plain_password: str) -> str:

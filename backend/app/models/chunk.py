@@ -1,9 +1,9 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Integer, Text, TIMESTAMP, func
+from pgvector.sqlalchemy import Vector
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from pgvector.sqlalchemy import Vector
 
 from app.models.base import Base
 

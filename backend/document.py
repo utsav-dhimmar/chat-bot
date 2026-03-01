@@ -22,20 +22,15 @@ def get_file_hash(file_bytes: bytes) -> str:
     """PDF ka SHA256 hash nikalo - duplicate check ke liye"""
     return hashlib.sha256(file_bytes).hexdigest()
 
+
 @router.post("/search")
-def search_pdf(
-    document_id: str,
-    query: str,
-    db: Session = Depends(get_db)
-):
+def search_pdf(document_id: str, query: str, db: Session = Depends(get_db)):
     results = similarity_search(query, document_id, db)
     return {"results": results}
 
+
 @router.post("/upload")
-async def upload_pdf(
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db)
-):
+async def upload_pdf(file: UploadFile = File(...), db: Session = Depends(get_db)):
     # 1. Sirf PDF allow karo
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Sirf PDF files allowed hain!")
@@ -53,7 +48,7 @@ async def upload_pdf(
             "message": "Ye PDF pehle se upload hai!",
             "document_id": str(existing.id),
             "file_name": existing.file_name,
-            "status": existing.status.value
+            "status": existing.status.value,
         }
 
     # 5. Unique file name banao
@@ -100,7 +95,7 @@ async def upload_pdf(
             chunk_index=chunk["chunk_index"],
             page_number=chunk["page_number"],
             content=chunk["content"],
-            embedding=embeddings[i]
+            embedding=embeddings[i],
         )
         db.add(db_chunk)
 
@@ -112,5 +107,5 @@ async def upload_pdf(
         "document_id": str(new_doc.id),
         "file_name": unique_name,
         "file_size": len(file_bytes),
-        "status": new_doc.status.value
+        "status": new_doc.status.value,
     }

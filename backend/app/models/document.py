@@ -1,7 +1,15 @@
 import enum
 import uuid
 
-from sqlalchemy import Column, Enum, ForeignKey, Integer, String, TIMESTAMP, func
+from sqlalchemy import (
+    TIMESTAMP,
+    Column,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    func,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -18,7 +26,11 @@ class Document(Base):
     __tablename__ = "documents"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=True,
+    )
     file_name = Column(String(255), nullable=False)
     storage_path = Column(String(500), nullable=False)
     file_size = Column(Integer, nullable=False)

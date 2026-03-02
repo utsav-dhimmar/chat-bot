@@ -64,3 +64,20 @@ async def get_current_user(
         )
 
     return user
+
+
+def get_current_admin(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """
+    Same as get_current_user but also checks is_admin = True.
+    Use this on every admin route.
+
+    Raises HTTP 403 if user is not an admin.
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
+        )
+    return current_user

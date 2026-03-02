@@ -15,7 +15,7 @@ API docs at:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import auth, chat, documents
+from app.api import admin, auth, chat, documents
 from app.core.config import settings
 from app.db.session import create_all_tables
 from app.services.dspy_module import init_dspy
@@ -57,6 +57,7 @@ async def startup():
 app.include_router(auth.router)
 app.include_router(chat.router)
 app.include_router(documents.router)
+app.include_router(admin.router)
 
 
 # ── Health check ──────────────────────────────────────────────────────────────

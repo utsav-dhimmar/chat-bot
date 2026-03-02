@@ -54,5 +54,9 @@ class Settings(BaseSettings):
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     EMBEDDING_MODEL: str = "nomic-embed-text"
 
+    #  Admin
+    ADMIN_EMAIL: str = Field(description="Admin email for authentication")
+    ADMIN_PASS: str = Field(description="Admin password for authentication")
+
 
 settings = Settings()

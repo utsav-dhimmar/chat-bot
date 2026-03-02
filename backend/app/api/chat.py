@@ -105,6 +105,7 @@ async def ask(
     return ChatResponse(
         session_id=session.id,
         message_id=assistant_msg.id,
+        document_id=body.document_id,
         answer=answer,
         sources=sources,
     )
@@ -122,6 +123,22 @@ async def list_sessions(
         .order_by(ChatSession.updated_at.desc())
     )
     return result.scalars().all()
+
+
+@router.get("/sessions/{session_id}", response_model=SessionRead)
+async def get_session(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Get a single chat session by ID."""
+    session = await db.get(ChatSession, session_id)
+    if not session or session.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chat session not found",
+        )
+    return session
 
 
 @router.get("/sessions/{session_id}/messages", response_model=list[MessageRead])

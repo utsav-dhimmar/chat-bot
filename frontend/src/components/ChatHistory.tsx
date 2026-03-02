@@ -9,32 +9,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from './Button';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import { ChatServices } from '@/apis/services/chat.service';
-import { useState, useEffect } from 'react';
-import type { ChatSession } from '@/apis/types';
+import { useEffect } from 'react';
+import { fetchSessions } from '@/store/slices/chatSlice';
 
 export function ChatHistory({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) {
-  const [session, setSession] = useState<null | ChatSession[]>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const f = async () => {
-      setLoading(true);
-      try {
-        const d = await ChatServices.listSessions();
-        setSession(d || []);
-      } catch (error) {
-        setSession([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    f();
-  }, []);
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const { sessions, loading } = useAppSelector((state) => state.chat);
+
+  useEffect(() => {
+    dispatch(fetchSessions());
+  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -67,8 +53,8 @@ export function ChatHistory({ isOpen, onToggle }: { isOpen: boolean; onToggle: (
       </div>
       {isOpen && (
         <ul className="list-group mt-3 overflow-auto flex-grow-1">
-          {session && session.length > 0
-            ? session.map(({ id, title }) => (
+          {sessions && sessions.length > 0
+            ? sessions.map(({ id, title }) => (
                 <li className="list-group-item list-group-item-action text-center p-2" key={id}>
                   <Link
                     to={{
@@ -76,7 +62,7 @@ export function ChatHistory({ isOpen, onToggle }: { isOpen: boolean; onToggle: (
                     }}
                     className="text-decoration-none text-dark small d-block text-truncate"
                   >
-                    {title}
+                    {title || 'Untitled Chat'}
                   </Link>
                 </li>
               ))

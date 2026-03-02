@@ -1,5 +1,7 @@
 import { axiosClient } from '../client';
 import type {
+  AdminLoginRequest,
+  AdminLoginResponse,
   PasswordChange,
   PasswordChangeResponse,
   TokenResponse,
@@ -26,6 +28,10 @@ export const AuthServices = {
       '/auth/change-password',
       data
     );
+    return res;
+  },
+  adminLogin: async (data: AdminLoginRequest): Promise<AdminLoginResponse> => {
+    const { data: res } = await axiosClient.post<AdminLoginResponse>('/admin/login', data);
     return res;
   },
 };

@@ -4,7 +4,7 @@ import { ChatHistory } from './ChatHistory';
 import { ErrorAlert } from './ErrorAlert';
 import { Input } from './Input';
 import { ValidationCmp } from './ValidationCmp';
-import { ProtectedRoute, PublicRoute } from './AuthRoute';
+import { ProtectedRoute, PublicRoute, AdminProtectedRoute } from './AuthRoute';
 
 export {
   AIMessage,
@@ -16,4 +16,5 @@ export {
   ValidationCmp,
   ProtectedRoute,
   PublicRoute,
+  AdminProtectedRoute,
 };

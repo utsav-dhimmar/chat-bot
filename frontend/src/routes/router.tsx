@@ -6,9 +6,10 @@ import Login from '@/pages/Login';
 import NewPdf from '@/pages/NewPdf';
 import Register from '@/pages/Register';
 import AdminDashboard from '@/pages/admin/Dashboard';
+import AdminLogin from '@/pages/admin/Login';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { NotFound } from '@/components/NotFound';
-import { ProtectedRoute, PublicRoute } from '@/components';
+import { ProtectedRoute, PublicRoute, AdminProtectedRoute } from '@/components';
 
 export const browserRoutes = createBrowserRouter([
   {
@@ -33,12 +34,21 @@ export const browserRoutes = createBrowserRouter([
         ],
       },
       {
-        element: <ProtectedRoute />,
+        path: 'admin/login',
+        element: <AdminLogin />,
+      },
+      {
+        element: <AdminProtectedRoute />,
         children: [
           {
             path: 'admin',
             element: <AdminDashboard />,
           },
+        ],
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
           {
             element: <ChatLayout />,
             children: [

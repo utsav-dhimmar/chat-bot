@@ -23,3 +23,14 @@ export function PublicRoute() {
 
   return <Outlet />;
 }
+
+// For Only loggedin admin
+export function AdminProtectedRoute() {
+  const { isAuthenticated } = useAppSelector((state) => state.admin);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return <Outlet />;
+}

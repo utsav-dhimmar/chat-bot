@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
+import { useAppDispatch } from '@/store/hooks';
+import { fetchSessions } from '@/store/slices/chatSlice';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // MB * KB * BYTES
 
@@ -21,6 +23,7 @@ type PdfFormData = z.infer<typeof pdfSchema>;
 
 export default function NewPdf() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,6 +49,9 @@ export default function NewPdf() {
         question: summaryQuestion,
       });
       console.log('Auto-summary:', summaryResponse);
+
+      // Refresh chat history in redux
+      await dispatch(fetchSessions());
 
       navigate(`/chat/${summaryResponse.session_id}?document_id=${res.document_id}`);
     } catch (err: any) {

@@ -1,16 +1,20 @@
-import { ChatServices } from '@/apis/services/chat.service';
-import type { ChatMessage, ChatSession } from '@/apis/types';
-import { AIMessage, HumanMessage } from '@/components/';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Fragment, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useLoaderData, useParams, useSearchParams } from 'react-router-dom';
-import { z } from 'zod';
+import { ChatServices } from "@/apis/services/chat.service";
+import type { ChatMessage, ChatSession } from "@/apis/types";
+import { AIMessage, HumanMessage } from "@/components/";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Fragment, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLoaderData, useParams, useSearchParams } from "react-router-dom";
+import { z } from "zod";
 
 const MessageSchema = z.object({
-  message: z.string().trim().min(5, {
-    error: "Empty Message can't be send",
-  }),
+  message: z
+    .string()
+    .trim()
+    .min(5, {
+      error: "Empty Message can't be send",
+    })
+    .max(2000, "Question must be 2000 characters or fewer"),
 });
 type messageData = z.infer<typeof MessageSchema>;
 
@@ -23,8 +27,11 @@ export default function Chat() {
   const { conversationId } = useParams<{ conversationId: string }>();
   const [searchParams] = useSearchParams();
   const loaderData = useLoaderData<LoaderData>();
-  const document_id = loaderData?.session?.document_id || searchParams.get('document_id') || ''; // helper for once when PDF is uploaded
-  const [messages, setMessages] = useState<{ role: string; content: string; id?: string }[]>([]);
+  const document_id =
+    loaderData?.session?.document_id || searchParams.get("document_id") || ""; // helper for once when PDF is uploaded
+  const [messages, setMessages] = useState<
+    { role: string; content: string; id?: string }[]
+  >([]);
 
   const [loading, setLoading] = useState(false);
   const {
@@ -43,7 +50,7 @@ export default function Chat() {
           role: m.role,
           content: m.content,
           id: m.id,
-        }))
+        })),
       );
     }
   }, [loaderData.messages]);
@@ -58,20 +65,20 @@ export default function Chat() {
       });
       setMessages((prev) => [
         ...prev,
-        { role: 'user', content: formData.message },
-        { role: 'assistant', content: response.answer },
+        { role: "user", content: formData.message },
+        { role: "assistant", content: response.answer },
       ]);
       reset();
     } catch (err) {
-      console.error('Failed to send message:', err);
+      console.error("Failed to send message:", err);
     }
   };
   return (
     <div
       className="card shadow-sm flex-grow-1 h-100 border-0"
       style={{
-        maxWidth: '100%',
-        borderRadius: '0',
+        maxWidth: "100%",
+        borderRadius: "0",
       }}
     >
       <div className="card-header bg-white py-3 border-bottom text-center">
@@ -85,22 +92,27 @@ export default function Chat() {
         ) : (
           messages?.map(({ content, id, role }, index) => (
             <Fragment key={id || index}>
-              {role === 'user' && <HumanMessage message={content} />}
-              {role === 'assistant' && <AIMessage message={content} />}
+              {role === "user" && <HumanMessage message={content} />}
+              {role === "assistant" && <AIMessage message={content} />}
             </Fragment>
           ))
         )}
       </div>
       <div className="card-footer">
-        <form className="d-flex align-items-center gap-2" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="d-flex align-items-center gap-2"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex-grow-1">
             <input
               type="text"
-              className={`form-control ${errors.message ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.message ? "is-invalid" : ""}`}
               placeholder="Type message..."
-              {...register('message')}
+              {...register("message")}
             />
-            {errors.message && <div className="invalid-feedback">{errors.message.message}</div>}
+            {errors.message && (
+              <div className="invalid-feedback">{errors.message.message}</div>
+            )}
           </div>
           <button type="submit" className="btn btn-primary">
             Send

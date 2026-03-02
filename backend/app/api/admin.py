@@ -33,7 +33,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.core.dependencies import get_current_admin
+from app.core.dependencies import verify_admin_token
 from app.core.security import create_access_token
 from app.db.models import (
     ChatMessage,
@@ -71,7 +71,7 @@ async def admin_login(body: AdminLoginRequest):
     Body: { "email": "...", "password": "..." }
     Returns: { "access_token": "...", "token_type": "bearer", "admin_email": "..." }
     """
-    if body.email != settings.ADMIN_EMAIL or body.password != settings.ADMIN_PASSWORD:
+    if body.email != settings.ADMIN_EMAIL or body.password != settings.ADMIN_PASS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid admin credentials",
@@ -90,7 +90,7 @@ async def admin_login(body: AdminLoginRequest):
 @router.get("/users")
 async def list_users(
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(get_current_admin),
+    _: str = Depends(verify_admin_token),
 ):
     """List all registered users with their document + message counts."""
     result = await db.execute(select(User).order_by(User.created_at.desc()))
@@ -118,7 +118,7 @@ async def list_users(
                 "username": user.username,
                 "email": user.email,
                 "is_active": user.is_active,
-                "is_admin": user.is_admin,
+                # "is_admin": user.is_admin,
                 "document_count": doc_count,
                 "message_count": msg_count,
                 "created_at": user.created_at.isoformat(),
@@ -135,7 +135,7 @@ async def list_users(
 async def get_user_detail(
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(get_current_admin),
+    _: str = Depends(verify_admin_token),
 ):
     """Get a specific user's profile + all their documents."""
     user = await db.get(User, user_id)
@@ -179,7 +179,7 @@ async def get_user_detail(
 async def delete_user(
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    current_admin: User = Depends(get_current_admin),
+    current_admin: str = Depends(verify_admin_token),
 ):
     """
     Permanently delete a user and ALL their data:
@@ -190,13 +190,6 @@ async def delete_user(
 
     This cannot be undone.
     """
-    # Prevent admin from deleting themselves
-    if user_id == current_admin.id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="You cannot delete your own admin account",
-        )
-
     user = await db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -240,19 +233,13 @@ async def delete_user(
 async def deactivate_user(
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    current_admin: User = Depends(get_current_admin),
+    current_admin: str = Depends(verify_admin_token),
 ):
     """
     Deactivate a user account (soft ban).
     User cannot login but their data is preserved.
     Reversible — use /activate to restore access.
     """
-    if user_id == current_admin.id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="You cannot deactivate your own account",
-        )
-
     user = await db.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -262,6 +249,7 @@ async def deactivate_user(
 
     user.is_active = False
     db.add(user)
+    await db.commit()
 
     return {"message": f"User '{user.username}' has been deactivated"}
 
@@ -273,7 +261,7 @@ async def deactivate_user(
 async def activate_user(
     user_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(get_current_admin),
+    _: str = Depends(verify_admin_token),
 ):
     """Reactivate a previously deactivated user account."""
     user = await db.get(User, user_id)
@@ -285,6 +273,7 @@ async def activate_user(
 
     user.is_active = True
     db.add(user)
+    await db.commit()
 
     return {"message": f"User '{user.username}' has been reactivated"}
 
@@ -295,7 +284,7 @@ async def activate_user(
 @router.get("/stats")
 async def get_stats(
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(get_current_admin),
+    _: str = Depends(verify_admin_token),
 ):
     """Platform-wide statistics for the admin dashboard."""
 
@@ -323,9 +312,9 @@ async def get_stats(
 
     return {
         "users": {
-            "total": total_users,
-            "active": active_users,
-            "inactive": total_users - active_users,
+            "total": total_users or 0,
+            "active": active_users or 0,
+            "inactive": (total_users or 0) - (active_users or 0),
         },
         "documents": {
             "total": total_docs,
@@ -344,7 +333,7 @@ async def get_stats(
 @router.get("/questions")
 async def get_all_questions(
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(get_current_admin),
+    _: str = Depends(verify_admin_token),
 ):
     """Get all questions asked by users across all sessions."""
     result = await db.execute(
@@ -361,6 +350,9 @@ async def get_all_questions(
             select(ChatSession).where(ChatSession.id == msg.session_id)
         )
         session = session_result.scalar_one_or_none()
+
+        if not session:
+            continue
 
         user_result = await db.execute(select(User).where(User.id == session.user_id))
         user = user_result.scalar_one_or_none()

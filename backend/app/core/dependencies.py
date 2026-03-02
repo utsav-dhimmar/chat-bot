@@ -66,6 +66,37 @@ async def get_current_user(
     return user
 
 
+async def verify_admin_token(
+    credentials: HTTPAuthorizationCredentials = Depends(_bearer_scheme),
+) -> str:
+    """
+    Verify JWT token for admin routes.
+    Admin tokens are created with subject 'admin:<email>' from /admin/login.
+    This dependency does NOT check database - just verifies the token is valid.
+    """
+    credentials_exc = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate admin credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    if not credentials:
+        raise credentials_exc
+
+    try:
+        token_subject = decode_token(credentials.credentials)
+    except JWTError:
+        raise credentials_exc
+
+    if not token_subject.startswith("admin:"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid admin token",
+        )
+
+    return token_subject
+
+
 def get_current_admin(
     current_user: User = Depends(get_current_user),
 ) -> User:

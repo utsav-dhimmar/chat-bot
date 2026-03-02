@@ -51,6 +51,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False, index=True)
     hashed_password = Column(Text, nullable=False)  # Fernet(bcrypt(sha256(plain)))
     is_active = Column(Boolean, default=True, nullable=False)
+    is_admin = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), default=_now, nullable=False)
 
     # relationships

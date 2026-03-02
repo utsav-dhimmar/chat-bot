@@ -1,5 +1,5 @@
-import { useAppSelector } from "@/store/hooks";
-import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from '@/store/hooks';
+import { Navigate, Outlet } from 'react-router-dom';
 
 // For Only loggedin user
 export function ProtectedRoute() {

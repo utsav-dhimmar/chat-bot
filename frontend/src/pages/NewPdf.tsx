@@ -1,3 +1,4 @@
+import { ChatServices } from '@/apis/services/chat.service';
 import { DocumentServices } from '@/apis/services/document.service';
 import { ErrorAlert } from '@/components';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +38,16 @@ export default function NewPdf() {
       setError(null);
       const res = await DocumentServices.upload(data.file[0]);
       console.log('Upload success:', res);
-      navigate(`/chat/${res.document_id}`);
+      // ASK EXPLICT OR FIND BETTER WAY
+      const summaryQuestion =
+        'Provide a detailed summary of this document in paragraph form, covering all the main points and key information.';
+      const summaryResponse = await ChatServices.ask({
+        document_id: res.document_id,
+        question: summaryQuestion,
+      });
+      console.log('Auto-summary:', summaryResponse);
+
+      navigate(`/chat/${summaryResponse.session_id}?document_id=${res.document_id}`);
     } catch (err: any) {
       setError(err.message || 'Failed to upload PDF');
     } finally {

@@ -1,10 +1,10 @@
-import type { AdminUser } from "@/temp/adminData";
+import type { AdminUser } from '@/temp/adminData';
 import {
   RiDeleteBin7Line,
   RiProhibitedLine,
   RiShieldUserLine,
   RiUserAddLine,
-} from "@remixicon/react";
+} from '@remixicon/react';
 
 interface UserListProps {
   users: AdminUser[];
@@ -36,7 +36,7 @@ export function UserList({ users, onBan, onDelete }: UserListProps) {
                     <div className="d-flex align-items-center">
                       <div
                         className="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white me-2"
-                        style={{ width: "32px", height: "32px" }}
+                        style={{ width: '32px', height: '32px' }}
                       >
                         {user.name.charAt(0)}
                       </div>
@@ -50,9 +50,9 @@ export function UserList({ users, onBan, onDelete }: UserListProps) {
                   <td>
                     <span
                       className={`badge rounded-pill ${
-                        user.status === "active"
-                          ? "bg-success-subtle text-success"
-                          : "bg-danger-subtle text-danger"
+                        user.status === 'active'
+                          ? 'bg-success-subtle text-success'
+                          : 'bg-danger-subtle text-danger'
                       }`}
                     >
                       {user.status}
@@ -64,14 +64,10 @@ export function UserList({ users, onBan, onDelete }: UserListProps) {
                         type="button"
                         className="btn btn-outline-warning"
                         onClick={() => onBan(user.id)}
-                        title={
-                          user.status === "active" ? "Ban User" : "Unban User"
-                        }
+                        title={user.status === 'active' ? 'Ban User' : 'Unban User'}
                       >
-                        {user.status === "active" && (
-                          <RiProhibitedLine size={16} />
-                        )}
-                        {user.status == "banned" && <RiUserAddLine size={16} />}
+                        {user.status === 'active' && <RiProhibitedLine size={16} />}
+                        {user.status == 'banned' && <RiUserAddLine size={16} />}
                       </button>
                       <button
                         type="button"

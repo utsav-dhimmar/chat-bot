@@ -67,6 +67,7 @@ class ChatResponse(BaseModel):
         {
             "session_id": "uuid",
             "message_id": "uuid",
+            "document_id": "uuid",
             "answer":     "The document states that ...",
             "sources": [
                 { "chunk_id": "uuid", "content": "...", "similarity_score": 0.87 }
@@ -76,6 +77,7 @@ class ChatResponse(BaseModel):
 
     session_id: UUID
     message_id: UUID
+    document_id: UUID
     answer: str
     sources: list[SourceChunk]
 

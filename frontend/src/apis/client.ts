@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { store } from '@/store';
+import { setBan } from '@/store/slices/banSlice';
 
 export const axiosClient = axios.create({
   baseURL: '/api',
@@ -46,6 +48,13 @@ axiosClient.interceptors.response.use(
         }
     ]
       */
+      const hasDeactivated =
+        typeof detail === 'string' &&
+        detail.toLowerCase().includes('account is deactivated');
+      if (hasDeactivated) {
+        store.dispatch(setBan(detail));
+      }
+
       if (detail) {
         // detail must be res
         if (Array.isArray(detail)) {

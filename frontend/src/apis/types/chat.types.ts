@@ -13,6 +13,7 @@ export interface ChatAsk {
 export interface ChatResponse {
   session_id: string;
   message_id: string;
+  document_id: string;
   answer: string;
   sources: SourceChunk[];
 }

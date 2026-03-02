@@ -1,12 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export function NotFound() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      navigate("/");
+      navigate('/');
     }, 3 * 1000);
     () => clearTimeout(timerId);
   }, []);
@@ -20,7 +20,7 @@ export function NotFound() {
         <button
           type="button"
           className="btn btn-primary btn-lg px-4 gap-3"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         >
           Go to Home
         </button>

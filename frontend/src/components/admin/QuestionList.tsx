@@ -1,5 +1,5 @@
-import type { UserQuestion } from "@/temp/adminData";
-import { RiCalendarLine, RiFileTextLine } from "@remixicon/react";
+import type { UserQuestion } from '@/temp/adminData';
+import { RiCalendarLine, RiFileTextLine } from '@remixicon/react';
 
 interface QuestionListProps {
   questions: UserQuestion[];

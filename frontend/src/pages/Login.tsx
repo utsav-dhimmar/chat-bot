@@ -28,11 +28,13 @@ export default function Login() {
       setBackendError(null);
       const res = await AuthServices.login(data);
       console.log('Login success:', res);
-      
-      dispatch(setCredentials({
-        user: res.user,
-        token: res.access_token
-      }));
+
+      dispatch(
+        setCredentials({
+          user: res.user,
+          token: res.access_token,
+        })
+      );
 
       navigate('/');
     } catch (err: any) {

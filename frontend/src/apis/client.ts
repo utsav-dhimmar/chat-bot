@@ -1,13 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const axiosClient = axios.create({
-  baseURL: "/api",
+  baseURL: '/api',
 });
 
 // function run before api call
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -15,13 +15,13 @@ axiosClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    let errorMessage = "An unexpected error occurred";
+    let errorMessage = 'An unexpected error occurred';
 
     if (axios.isAxiosError(error)) {
       const data = error.response?.data;
@@ -51,8 +51,8 @@ axiosClient.interceptors.response.use(
         if (Array.isArray(detail)) {
           // should be array
           errorMessage = detail
-            .map((err: any) => `${err.loc.slice(1).join(".")}: ${err.msg}`) // values after 0 index : message
-            .join(", "); // join eniter thing
+            .map((err: any) => `${err.loc.slice(1).join('.')}: ${err.msg}`) // values after 0 index : message
+            .join(', '); // join eniter thing
         } else {
           errorMessage = detail;
         }
@@ -64,5 +64,5 @@ axiosClient.interceptors.response.use(
     }
 
     return Promise.reject(new Error(errorMessage)); // throw it and hanlde at using api call
-  },
+  }
 );

@@ -10,6 +10,10 @@ export const ChatServices = {
     const { data: res } = await axiosClient.get<ChatSession[]>('/chat/sessions');
     return res;
   },
+  getSession: async (sessionId: string): Promise<ChatSession> => {
+    const { data: res } = await axiosClient.get<ChatSession>(`/chat/sessions/${sessionId}`);
+    return res;
+  },
   getMessages: async (sessionId: string): Promise<ChatMessage[]> => {
     const { data: res } = await axiosClient.get<ChatMessage[]>(
       `/chat/sessions/${sessionId}/messages`

@@ -14,7 +14,7 @@ export interface AdminUser {
   username: string;
   email: string;
   is_active: boolean;
-  is_admin: boolean;
+  is_admin?: boolean;
   document_count: number;
   message_count: number;
   created_at: string;

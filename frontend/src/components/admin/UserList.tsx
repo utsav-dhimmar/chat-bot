@@ -10,6 +10,8 @@ interface FormattedUser {
   email: string;
   status: "active" | "banned";
   joinedAt: string;
+  documentCount: number;
+  messageCount: number;
 }
 
 interface UserListProps {
@@ -27,10 +29,12 @@ export function UserList({ users, onBan, onDelete }: UserListProps) {
       <div className="card-body p-0">
         <div style={{ maxHeight: "600px", overflowY: "auto" }}>
           <div className="table-responsive">
-            <table className="table table-hover align-middle mb-0">
+            <table className="table table-hover align-middle mb-0 text-nowrap">
               <thead className="bg-light sticky-top">
                 <tr>
                   <th className="px-4">User</th>
+                  <th>Docs</th>
+                  <th>Msgs</th>
                   <th>Joined</th>
                   <th>Status</th>
                   <th className="text-end px-4">Actions</th>
@@ -41,17 +45,21 @@ export function UserList({ users, onBan, onDelete }: UserListProps) {
                   <tr key={user.id}>
                     <td className="px-4">
                       <div className="d-flex align-items-center">
-                        <div
-                          className="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white me-2"
-                          style={{ width: "32px", height: "32px" }}
-                        >
-                          {user.name.charAt(0)}
-                        </div>
                         <div>
                           <div className="fw-semibold">{user.name}</div>
                           <div className="text-muted small">{user.email}</div>
                         </div>
                       </div>
+                    </td>
+                    <td>
+                      <span className="badge bg-light text-dark border">
+                        {user.documentCount}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="badge bg-light text-dark border">
+                        {user.messageCount}
+                      </span>
                     </td>
                     <td className="text-muted small">{user.joinedAt}</td>
                     <td>

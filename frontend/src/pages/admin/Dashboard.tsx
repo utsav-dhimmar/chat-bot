@@ -3,7 +3,7 @@ import type { AdminQuestion, AdminUser } from "@/apis/types/admin.types";
 import { QuestionList } from "@/components/admin/QuestionList";
 import { UserList } from "@/components/admin/UserList";
 import { logoutAdmin } from "@/store/slices/adminSlice";
-import { RiDashboardLine, RiLogoutCircleLine } from "@remixicon/react";
+import { RiLogoutCircleLine } from "@remixicon/react";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
       console.log("Questions:", questionsData);
       const statsData = await AdminServices.getStats();
       console.log("Stats:", statsData);
-      // setUsers(usersData);
+      setUsers(usersData);
       setQuestions(questionsData);
     } catch (error) {
       console.error("Failed to fetch admin data:", error);
@@ -73,8 +73,10 @@ export default function AdminDashboard() {
     id: u.id,
     name: u.username,
     email: u.email,
-    status: u.is_active ? "active" : "banned",
+    status: u.is_active ? "active" : "banned" as const,
     joinedAt: new Date(u.created_at).toLocaleDateString(),
+    documentCount: u.document_count,
+    messageCount: u.message_count,
   }));
 
   const formatQuestions = questions.map((q) => ({
@@ -102,9 +104,6 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="d-flex align-items-center gap-2">
-            <div className="bg-primary p-2 rounded text-white">
-              <RiDashboardLine size={24} />
-            </div>
             <div>
               <h3 className="mb-0 fw-bold">Admin Dashboard</h3>
             </div>

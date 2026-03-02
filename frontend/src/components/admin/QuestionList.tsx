@@ -1,4 +1,4 @@
-import { RiCalendarLine, RiFileTextLine } from '@remixicon/react';
+import { RiCalendarLine } from "@remixicon/react";
 
 interface FormattedQuestion {
   id: string;
@@ -20,17 +20,13 @@ export function QuestionList({ questions }: QuestionListProps) {
         <h5 className="mb-0 fw-bold">Recent User Questions</h5>
       </div>
       <div className="card-body p-0">
-        <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+        <div style={{ maxHeight: "600px", overflowY: "auto" }}>
           <ul className="list-group list-group-flush">
             {questions.map((q) => (
               <li className="list-group-item p-4 border-bottom" key={q.id}>
                 <div className="d-flex justify-content-between align-items-start mb-2">
                   <div className="d-flex align-items-center">
                     <div className="fw-bold me-2">{q.userName}</div>
-                    <span className="badge bg-secondary-subtle text-secondary small px-2 py-1 rounded-pill">
-                      <RiFileTextLine size={12} className="me-1" />
-                      {q.documentTitle}
-                    </span>
                   </div>
                   <div className="text-muted small d-flex align-items-center">
                     <RiCalendarLine size={14} className="me-1" />

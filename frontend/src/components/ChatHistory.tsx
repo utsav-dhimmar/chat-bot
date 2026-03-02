@@ -21,11 +21,19 @@ export function ChatHistory({
   onToggle: () => void;
 }) {
   const [session, setSession] = useState<null | ChatSession[]>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const f = async () => {
-      const d = await ChatServices.listSessions();
-      setSession(d);
+      setLoading(true);
+      try {
+        const d = await ChatServices.listSessions();
+        setSession(d || []);
+      } catch (error) {
+        setSession([]);
+      } finally {
+        setLoading(false);
+      }
     };
     f();
   }, []);
@@ -69,8 +77,7 @@ export function ChatHistory({
       </div>
       {isOpen && (
         <ul className="list-group mt-3 overflow-auto flex-grow-1">
-          {session &&
-            session.length >= 0 &&
+          {session && session.length > 0 ? (
             session.map(({ id, title }) => (
               <li
                 className="list-group-item list-group-item-action text-center p-2"
@@ -85,7 +92,14 @@ export function ChatHistory({
                   {title}
                 </Link>
               </li>
-            ))}
+            ))
+          ) : (
+            !loading && (
+              <li className="list-group-item text-center p-3 text-muted border-0">
+                <small>No chat found</small>
+              </li>
+            )
+          )}
         </ul>
       )}
 

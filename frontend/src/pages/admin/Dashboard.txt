@@ -1,0 +1,119 @@
+Stats Row
+        <div className="row g-4 mb-4">
+          {/* Users */}
+          <div className="col-md-3">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-primary-subtle p-3 rounded-circle text-primary">
+                  <RiGroupLine size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">Users (Active/Total)</div>
+                  <h4 className="mb-0 fw-bold">
+                    {stats?.users.active || 0} / {stats?.users.total || 0}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Documents */}
+          <div className="col-md-3">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-success-subtle p-3 rounded-circle text-success">
+                  <RiFileTextLine size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">
+                    Documents (Ready/Total)
+                  </div>
+                  <h4 className="mb-0 fw-bold">
+                    {stats?.documents.ready || 0} /{" "}
+                    {stats?.documents.total || 0}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Storage */}
+          <div className="col-md-3">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-warning-subtle p-3 rounded-circle text-warning">
+                  <RiHardDrive2Line size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">Disk Usage</div>
+                  <h4 className="mb-0 fw-bold">
+                    {stats?.documents.disk_mb
+                      ? Number(stats.documents.disk_mb).toFixed(2)
+                      : "0.00"}{" "}
+                    MB
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Chunks */}
+          <div className="col-md-3">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-secondary-subtle p-3 rounded-circle text-secondary">
+                  <RiDatabase2Line size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">Total Chunks</div>
+                  <h4 className="mb-0 fw-bold">{stats?.chunks || 0}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sessions */}
+          <div className="col-md-4">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-info-subtle p-3 rounded-circle text-info">
+                  <RiChat3Line size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">Total Sessions</div>
+                  <h4 className="mb-0 fw-bold">{stats?.sessions || 0}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="col-md-4">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-primary-subtle p-3 rounded-circle text-primary">
+                  <RiQuestionAnswerLine size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">Total Messages</div>
+                  <h4 className="mb-0 fw-bold">{stats?.messages || 0}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Inactive Users */}
+          <div className="col-md-4">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="d-flex align-items-center gap-3">
+                <div className="bg-danger-subtle p-3 rounded-circle text-danger">
+                  <RiProhibitedLine size={24} />
+                </div>
+                <div>
+                  <div className="text-muted small">Inactive Users</div>
+                  <h4 className="mb-0 fw-bold">{stats?.users.inactive || 0}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>

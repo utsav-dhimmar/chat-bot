@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+    apis:
+        build: .
+        container_name: chat-bot-app
+        env_file:
+            - "backend/.env"
+        ports:
+            - "8000:8000"
+
+        depends_on:
+            - db
+
+    db:
+        # image: postgres # OLD NAME
+        image: pgvector/pgvector:pg16
+        container_name: postgres
+        environment:
+            POSTGRES_DB: demo-db
+            POSTGRES_USER: utsav
+            POSTGRES_PASSWORD: 123
+        ports:
+            - 5432:5432
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -d demo-db -U utsav || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+    pgadmin:
+        image: dpage/pgadmin4
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@example.com
+            PGADMIN_DEFAULT_PASSWORD: 123
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+
+volumes:
+    pgdata:

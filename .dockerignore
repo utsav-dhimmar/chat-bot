@@ -1,0 +1,56 @@
+# Byte-code files
+**/__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+
+# Virtual environment
+**/.venv/
+**/venv/
+
+# Editor/IDE-specific files
+.vscode/
+.idea/
+**/.ruff_cache/
+**/.mypy_cache/
+**/.pytest_cache/
+
+# Version control
+.git/
+.gitignore
+
+# Environment variables
+**/.env
+**/.env.*
+!**/.env.example
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Project specific
+.pre-commit-config.yaml
+CONTRIBUTING.md
+README.md
+**/README.md
+admin.py
+
+# Test and documentation
+**/tests/
+**/test/
+docs/
+
+# Local development files and build artifacts
+logs/
+pip-log.txt
+pip-wheel-metadata/
+.project
+.coverage
+dist/
+build/
+
+# Application specific
+backend/uploads/*
+frontend/
+backend/.python-version
